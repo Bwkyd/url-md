@@ -6,7 +6,12 @@
 
 [English →](./README.en.md) · 中文
 
-**任意 URL → 干净 Markdown**。Rust 单二进制 · 开源 · **比 [42md](https://42md.cc/cli) 快 3 倍 · 无配额 · 无云同步**。
+**任意 URL → 干净 Markdown**。专注微信公众号 + MCP 协议 · Rust 单二进制 · Apache-2.0。
+
+## 起源与姊妹项目
+
+- **起源**:升级 [`Bwkyd/wexin-read-mcp`](https://github.com/Bwkyd/wexin-read-mcp)(Python · 337★ · 微信反爬被打穿后的 Rust 重写)。老 repo 继续服务 MCP 老用户,本项目独立演进。
+- **姊妹项目** [`42md.cc`](https://42md.cc) — 阳志平老师作品,**通用 URL → Markdown 场景推荐用 42md**。url-md 与 42md 互补不竞争,专注微信/中文垂直 + MCP 协议优先。
 
 ## 安装
 
@@ -95,14 +100,6 @@ fetched_at: 2026-04-17T16:17:48Z
 | HackerNews / Rust Book / 静态博客 | ✅ generic 兜底 |
 | 多文章列表首页 | ✅ 合并所有 `<article>` |
 
-## 起源
-
-本项目起源于 Python MCP [`Bwkyd/wexin-read-mcp`](https://github.com/Bwkyd/wexin-read-mcp)(337 stars · 微信公众号 MCP #1)。2026-03 微信加强反爬打穿 Playwright 方案,决定:
-
-- 老 repo 继续维护微信场景(v0.2.0 已切 agent-browser 内核)
-- 新开 url-md 用 Rust 重写,范围扩到任意 URL
-
-反爬内核设计参考 Apache-2.0 的 [`vercel-labs/agent-browser`](https://github.com/vercel-labs/agent-browser)(下个版本起通过 `git` 依赖复用其 CDP 模块)。
 
 ## 状态
 

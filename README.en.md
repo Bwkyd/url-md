@@ -6,7 +6,12 @@
 
 English · [中文 →](./README.md)
 
-**Any URL → clean Markdown.** A single Rust binary · open source · **3× faster than [42md](https://42md.cc/cli) · no quota · no cloud sync**.
+**Any URL → clean Markdown.** WeChat-focused · MCP-friendly · Rust single binary · Apache-2.0.
+
+## Origin & Sister project
+
+- **Origin**: Rust rewrite of [`Bwkyd/wexin-read-mcp`](https://github.com/Bwkyd/wexin-read-mcp) (Python · 337★ · Playwright broken by WeChat anti-bot upgrade). The old repo keeps serving existing MCP users; this one evolves independently.
+- **Sister project** [`42md.cc`](https://42md.cc) — by Yang Zhiping. **For generic URL → Markdown, use 42md**. url-md is complementary, not competing — focused on WeChat / Chinese verticals and MCP-first integration.
 
 ## Install
 
@@ -95,14 +100,6 @@ Bestsellers are popular, but are they worth reading? The author dissects one…
 | Hacker News / Rust Book / static blogs | ✅ generic fallback |
 | Multi-article list homepages | ✅ all `<article>` tags merged |
 
-## Origin
-
-Forked conceptually from the Python MCP [`Bwkyd/wexin-read-mcp`](https://github.com/Bwkyd/wexin-read-mcp) (337 stars · #1 WeChat MCP). After WeChat's anti-bot upgrade in March 2026 broke the Playwright approach:
-
-- The old repo keeps WeChat-specific MCP alive (v0.2.0 now proxies to `agent-browser` for anti-bot).
-- This repo (`url-md`) was written from scratch in Rust, scope widened to **any URL**.
-
-Anti-bot kernel design borrows from the Apache-2.0 licensed [`vercel-labs/agent-browser`](https://github.com/vercel-labs/agent-browser) (next version will consume it as a `git` dependency for CDP fallback).
 
 ## Status
 
