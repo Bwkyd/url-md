@@ -13,6 +13,7 @@ use url_md_core::{
     adapter::{Adapter, Article, ExtractError, MarkdownDoc, Strategy},
     fetcher::FetchedPage,
     parser::html_to_markdown,
+    text::{count_words, reading_time_minutes},
 };
 
 pub struct WeixinAdapter;
@@ -73,6 +74,7 @@ impl Adapter for WeixinAdapter {
         if let Some(pt) = publish_time_str {
             metadata.insert("publish_time_raw".into(), pt);
         }
+        metadata.insert("source_url".into(), page.final_url.to_string());
 
         Ok(Article {
             title,
@@ -85,6 +87,10 @@ impl Adapter for WeixinAdapter {
     }
 
     fn to_markdown(&self, article: &Article) -> MarkdownDoc {
+        let body = html_to_markdown(&article.body_html).trim().to_string();
+        let wc = count_words(&body);
+        let rt = reading_time_minutes(wc);
+
         let mut fm: BTreeMap<String, YamlValue> = BTreeMap::new();
         fm.insert("title".into(), YamlValue::String(article.title.clone()));
         if let Some(a) = &article.author {
@@ -96,7 +102,17 @@ impl Adapter for WeixinAdapter {
         if let Some(u) = &article.cover_url {
             fm.insert("cover_url".into(), YamlValue::String(u.to_string()));
         }
+        if let Some(src_url) = article.metadata.get("source_url") {
+            fm.insert("source_url".into(), YamlValue::String(src_url.clone()));
+        }
+        fm.insert("source".into(), YamlValue::String("url".into()));
+        fm.insert("extract_method".into(), YamlValue::String("weixin".into()));
         fm.insert("source_adapter".into(), YamlValue::String("weixin".into()));
+        fm.insert("word_count".into(), YamlValue::Number(serde_yaml::Number::from(wc)));
+        fm.insert(
+            "reading_time_minutes".into(),
+            YamlValue::Number(serde_yaml::Number::from(rt)),
+        );
         fm.insert(
             "fetched_at".into(),
             YamlValue::String(
@@ -106,7 +122,6 @@ impl Adapter for WeixinAdapter {
             ),
         );
 
-        let body = html_to_markdown(&article.body_html).trim().to_string();
         MarkdownDoc { frontmatter: fm, body }
     }
 }
