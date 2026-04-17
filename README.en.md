@@ -6,7 +6,7 @@
 
 English · [中文 →](./README.md)
 
-**Any URL → clean Markdown.** WeChat-focused · MCP-friendly · Rust single binary · Apache-2.0.
+**Any URL → clean Markdown.** MCP-native · Rust single binary · Apache-2.0.
 
 ## Install
 

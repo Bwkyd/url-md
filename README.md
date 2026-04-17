@@ -6,7 +6,7 @@
 
 [English →](./README.en.md) · 中文
 
-**任意 URL → 干净 Markdown**。专注微信公众号 + MCP 协议 · Rust 单二进制 · Apache-2.0。
+**任意 URL → 干净 Markdown**。MCP 协议原生 · Rust 单二进制 · Apache-2.0。
 
 ## 安装
 
