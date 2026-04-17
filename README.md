@@ -4,6 +4,8 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 [![Stars](https://img.shields.io/github/stars/Bwkyd/url-md?style=social)](https://github.com/Bwkyd/url-md)
 
+[English →](./README.en.md) · 中文
+
 **任意 URL → 干净 Markdown**。Rust 单二进制 · 开源 · **比 [42md](https://42md.cc/cli) 快 3 倍 · 无配额 · 无云同步**。
 
 ## 安装
