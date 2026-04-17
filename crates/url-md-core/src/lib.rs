@@ -11,11 +11,13 @@
 //! 此 crate 为 **无状态 core**,不包含 CLI / HTTP / MCP 入口实现。
 
 pub mod adapter;
+pub mod downloader;
 pub mod error;
 pub mod fetcher;
 pub mod parser;
 pub mod pipeline;
 pub mod router;
+pub mod text;
 
 pub use adapter::{Adapter, Article, MarkdownDoc, Strategy};
 pub use error::{FetchError, PipelineError};

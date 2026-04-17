@@ -23,10 +23,12 @@ Cargo.lock.bak
 # - src/: 历史 Python 快照 + agent-browser 本地 fork(已独立到 Bwkyd/agent-browser)
 # - source/: project-template 遗留目录
 # - QUICKSTART.md: project-template 遗留(url-md 用法见 README.md)
+# - out/: 本地抓取输出目录
 /chats/
 /src/
 /source/
 /QUICKSTART.md
+/out/
 
 # Legacy(Node 残留;若未来有 webapp 再精细化)
 node_modules/

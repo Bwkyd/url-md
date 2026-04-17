@@ -5,7 +5,41 @@ use std::time::Duration;
 
 use clap::Args as ClapArgs;
 use url_md_adapters::register_all;
+use url_md_core::downloader::localize_images;
 use url_md_core::{fetch_and_convert, FetchOptions, PipelineError, Registry};
+
+/// 三档日志: Quiet(无输出) / Default(关键节点) / Verbose(每阶段).
+#[derive(Debug, Clone, Copy)]
+enum LogLevel {
+    Quiet,
+    Default,
+    Verbose,
+}
+
+impl LogLevel {
+    fn from_args(verbose: bool, quiet: bool) -> Self {
+        if verbose {
+            LogLevel::Verbose
+        } else if quiet {
+            LogLevel::Quiet
+        } else {
+            LogLevel::Default
+        }
+    }
+
+    fn default(&self, msg: &str) {
+        match self {
+            LogLevel::Default | LogLevel::Verbose => eprintln!("{msg}"),
+            LogLevel::Quiet => {}
+        }
+    }
+
+    fn verbose(&self, msg: &str) {
+        if matches!(self, LogLevel::Verbose) {
+            eprintln!("{msg}");
+        }
+    }
+}
 
 #[derive(Debug, ClapArgs)]
 pub struct Args {
@@ -16,6 +50,11 @@ pub struct Args {
     #[arg(short, long)]
     pub output: Option<PathBuf>,
 
+    /// Download all images to this directory and rewrite Markdown to use relative paths.
+    /// Requires -o/--output to be set.
+    #[arg(long, value_name = "DIR")]
+    pub assets: Option<PathBuf>,
+
     /// Total timeout seconds (default: 45)
     #[arg(long, default_value_t = 45)]
     pub timeout: u64,
@@ -23,6 +62,10 @@ pub struct Args {
     /// Suppress stderr progress
     #[arg(long)]
     pub quiet: bool,
+
+    /// Verbose stage-by-stage progress on stderr (overrides --quiet if both set)
+    #[arg(short, long)]
+    pub verbose: bool,
 }
 
 pub async fn run(args: Args) -> Result<(), u8> {
@@ -35,9 +78,11 @@ pub async fn run(args: Args) -> Result<(), u8> {
         user_agent: None,
     };
 
-    if !args.quiet {
-        eprintln!("fetching {}...", args.url);
-    }
+    // 三档日志: --verbose > default > --quiet
+    let log = LogLevel::from_args(args.verbose, args.quiet);
+
+    log.default(&format!("fetching {}...", args.url));
+    log.verbose("  routing adapter · fetching HTML · extracting · rendering markdown");
 
     let doc = fetch_and_convert(&args.url, &options, &registry)
         .await
@@ -46,23 +91,66 @@ pub async fn run(args: Args) -> Result<(), u8> {
             error_to_exit_code(&e)
         })?;
 
+    log.verbose(&format!(
+        "  adapter={} · title={}",
+        doc.frontmatter
+            .get("source_adapter")
+            .and_then(|v| v.as_str())
+            .unwrap_or("?"),
+        doc.frontmatter
+            .get("title")
+            .and_then(|v| v.as_str())
+            .unwrap_or("(untitled)")
+    ));
+
     let rendered = doc.render();
 
     match args.output {
-        None => print!("{}", rendered),
+        None => {
+            if args.assets.is_some() && !args.quiet {
+                eprintln!("warning: --assets ignored without -o/--output");
+            }
+            print!("{}", rendered);
+        }
         Some(path) => {
             let final_path = if path.is_dir() {
                 path.join(auto_filename(&args.url, &doc))
             } else {
                 path
             };
-            std::fs::write(&final_path, rendered).map_err(|e| {
+            let markdown_parent = final_path
+                .parent()
+                .map(|p| p.to_path_buf())
+                .unwrap_or_else(|| PathBuf::from("."));
+            std::fs::create_dir_all(&markdown_parent).map_err(|e| {
+                eprintln!("error: mkdir {}: {e}", markdown_parent.display());
+                30u8
+            })?;
+
+            let final_markdown = if let Some(assets_dir) = &args.assets {
+                log.default(&format!("downloading images to {}...", assets_dir.display()));
+                match localize_images(&rendered, assets_dir, &markdown_parent).await {
+                    Ok((md, stats)) => {
+                        log.default(&format!(
+                            "images: {}/{} downloaded ({} failed)",
+                            stats.downloaded, stats.total, stats.failed
+                        ));
+                        md
+                    }
+                    Err(e) => {
+                        eprintln!("warning: image localize failed: {e} (keeping remote URLs)");
+                        rendered
+                    }
+                }
+            } else {
+                rendered
+            };
+
+            std::fs::write(&final_path, final_markdown).map_err(|e| {
                 eprintln!("error: write {}: {e}", final_path.display());
                 30u8
             })?;
-            if !args.quiet {
-                eprintln!("wrote {}", final_path.display());
-            }
+            log.default(&format!("wrote {}", final_path.display()));
         }
     }
 
