@@ -2,15 +2,26 @@
 
 **任意 URL → 干净 Markdown**。Rust 单二进制,开源。
 
+## 安装
+
 ```bash
-cargo build --release
-./target/release/url-md https://mp.weixin.qq.com/s/xxxxxxxx -o out/
+cargo install --git https://github.com/Bwkyd/url-md url-md --locked
 ```
 
-得到:
-- `out/YYYY-MM-DD-host-slug.md` — Markdown(含 YAML frontmatter)
-- `out/assets/img-NNNN.{jpg,png,gif,webp}` — 图片全下载
-- Markdown 里图片引用改写为相对路径,**离线可用**
+需要先装 [Rust](https://rustup.rs)。装完后 `url-md` 会放在 `~/.cargo/bin/` — 确认这条在 `$PATH` 里(rustup 默认会加)。
+
+<details>
+<summary>其他方式</summary>
+
+**从源码构建**(不想全局安装):
+```bash
+git clone https://github.com/Bwkyd/url-md.git
+cd url-md && cargo build --release
+./target/release/url-md <URL>
+```
+
+**预编译二进制**:v0.2.0 通过 GitHub Release 提供(TODO)。
+</details>
 
 ## 用法
 
@@ -19,21 +30,25 @@ url-md <URL>              # 输出 Markdown 到 stdout(不下图)
 url-md <URL> -o out/      # 存到目录 + 自动下图到 out/assets/
 ```
 
-其他 flag 见 `url-md --help`:`--no-assets` 关闭下图 · `--verbose / --quiet` 日志级别 · `--assets <DIR>` 自定义图片目录 · `--timeout` 超时。
+产物:
+- `out/YYYY-MM-DD-host-slug.md` — Markdown(含 YAML frontmatter)
+- `out/assets/img-NNNN.{jpg,png,gif,webp}` — 图片全下载,Markdown 引用改为相对路径,**离线可用**
+
+其他 flag 见 `url-md --help`:`--no-assets` 关闭下图 · `--assets <DIR>` 自定义图片目录 · `--verbose / --quiet` · `--timeout`。
 
 **退出码**: 0=成功 · 10=网络 · 11=反爬 · 12=付费墙 · 13=登录墙 · 20=解析 · 30=IO · 99=内部
 
-## 现在能抓什么
+## 能抓什么
 
 | 站点 | 支持度 |
 |---|---|
-| 微信公众号永久链 `mp.weixin.qq.com/s/*` | ✅ 完整(含图 / 作者 / 发布时间 / 封面) |
+| 微信公众号永久链 `mp.weixin.qq.com/s/*` | ✅ 完整(图 / 作者 / 发布时间 / 封面全齐) |
 | HackerNews / Rust Book / 静态博客 | ✅ generic 兜底 |
 | 多文章列表首页 | ✅ 合并所有 `<article>` |
 
 ## 状态
 
-**v0.1.0 · 当前只做单 URL 抓取**。批量 / HTTP 服务 / MCP / 登录墙等待后续版本。
+**v0.1.0 · 只做单 URL 抓取**。批量 / HTTP / MCP / 登录墙在规划中。
 
 ## 许可
 
