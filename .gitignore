@@ -19,13 +19,15 @@ Cargo.lock.bak
 .env*.local
 
 # Local-only (不提交到开源 repo)
-# - chats/: 私人对话记录
-# - src/: 历史 Python 快照 + agent-browser 本地 fork(已独立到 Bwkyd/agent-browser)
-# - source/: project-template 遗留目录
-# - QUICKSTART.md: project-template 遗留(url-md 用法见 README.md)
-# - out/: 本地抓取输出目录
+# 内部协作/决策文档(本地保留,不推 GitHub):
+/.42cog/
+/CLAUDE.md
+/.claudeignore
+/spec/
+/docs/
+/notes/
+# 其他本地产物:
 /chats/
-/src/
 /source/
 /QUICKSTART.md
 /out/
