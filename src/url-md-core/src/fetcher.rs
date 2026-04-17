@@ -1,6 +1,7 @@
 //! Fetcher 抽象 + HttpFetcher 快路实现.
 //!
-//! CdpFetcher 留在后续 phase 以 `agent_browser` lib 实现,此处只暴露 trait.
+//! CdpFetcher 是 scaffold(spec/dev/cdp-fetcher.spec.md v0.1.0-scaffold):
+//! 接口已锁,实际实现等 fork branch `Bwkyd/agent-browser:feat/lib-target` 稳定 + CfT 安装链路打通后落地.
 
 use std::collections::HashMap;
 use std::time::Duration;
@@ -115,5 +116,43 @@ impl Fetcher for HttpFetcher {
 
     fn kind(&self) -> FetcherKind {
         FetcherKind::Http
+    }
+}
+
+// -----------------------------------------------------------------------------
+// CdpFetcher (Phase 2 scaffold · 真实现见 spec/dev/cdp-fetcher.spec.md)
+// -----------------------------------------------------------------------------
+
+/// CDP 回退 fetcher(占位).
+///
+/// 真实现需消费 `Bwkyd/agent-browser` fork 的 lib target,本轮 session 未启用.
+/// 当前调用 `fetch()` 总是返回 `FetchError::CdpUnavailable` 让 pipeline 报错退出.
+pub struct CdpFetcher {
+    _placeholder: (),
+}
+
+impl CdpFetcher {
+    pub fn new() -> Self {
+        Self { _placeholder: () }
+    }
+}
+
+impl Default for CdpFetcher {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[async_trait]
+impl Fetcher for CdpFetcher {
+    async fn fetch(&self, _url: &Url, _opts: &FetchOpts) -> Result<FetchedPage, FetchError> {
+        Err(FetchError::CdpUnavailable {
+            reason: "CdpFetcher scaffold · real impl deferred (see spec/dev/cdp-fetcher.spec.md)"
+                .to_string(),
+        })
+    }
+
+    fn kind(&self) -> FetcherKind {
+        FetcherKind::Cdp
     }
 }

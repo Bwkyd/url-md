@@ -18,6 +18,9 @@ pub enum FetchError {
     #[error("content missing marker: {marker}")]
     ContentMissing { marker: String },
 
+    #[error("CDP unavailable: {reason}")]
+    CdpUnavailable { reason: String },
+
     #[error("fetch internal error: {0}")]
     Internal(String),
 }

@@ -42,10 +42,16 @@ impl Adapter for WeixinAdapter {
         }
     }
 
-    fn strategy(&self, _url: &Url) -> Strategy {
-        // 永久链 /s/* 走 Http 快路(M1 Spike 实测 100% 命中).
-        // Profile / 视频号等后续 phase 再细化.
-        Strategy::HttpFirstCdpFallback
+    fn strategy(&self, url: &Url) -> Strategy {
+        // 路由策略(spec/dev/cdp-fetcher.spec.md scaffold):
+        // - 永久链 /s/* → Http 快路(M1 Spike 实测 100% 命中)
+        // - profile / 视频号 / 历史推送 → 强制 Cdp(快路必失败)
+        //   Phase 2 实际 CdpFetcher 落地前会返回 CdpUnavailable.
+        match url.path() {
+            p if p.starts_with("/s/") => Strategy::HttpFirstCdpFallback,
+            p if is_cdp_only_path(p) => Strategy::Cdp,
+            _ => Strategy::HttpFirstCdpFallback,
+        }
     }
 
     fn content_marker(&self) -> Option<&str> {
@@ -126,6 +132,17 @@ impl Adapter for WeixinAdapter {
     }
 }
 
+/// Phase 2 scaffold: 这些 path 必须走 CDP(快路必失败).
+/// CdpFetcher 真实现见 spec/dev/cdp-fetcher.spec.md.
+fn is_cdp_only_path(path: &str) -> bool {
+    // 公众号主页 / 视频号 / 历史推送列表 — 都是 JS 渲染 + 反爬严格.
+    path.starts_with("/mp/profile_ext")
+        || path.starts_with("/mp/homepage")
+        || path.starts_with("/cgi-bin/")
+        || path.starts_with("/finder/")
+        || path.starts_with("/sph/")
+}
+
 fn pick_text(doc: &Html, selector: &str) -> Option<String> {
     let sel = Selector::parse(selector).ok()?;
     doc.select(&sel).next().map(|e| {
@@ -183,6 +200,26 @@ mod tests {
         assert!(matches!(
             a.strategy(&url),
             url_md_core::adapter::Strategy::HttpFirstCdpFallback
+        ));
+    }
+
+    #[test]
+    fn strategy_profile_forces_cdp() {
+        let a = WeixinAdapter::new();
+        let url = Url::parse("https://mp.weixin.qq.com/mp/profile_ext?__biz=xx").unwrap();
+        assert!(matches!(
+            a.strategy(&url),
+            url_md_core::adapter::Strategy::Cdp
+        ));
+    }
+
+    #[test]
+    fn strategy_video_account_forces_cdp() {
+        let a = WeixinAdapter::new();
+        let url = Url::parse("https://mp.weixin.qq.com/finder/abcdef").unwrap();
+        assert!(matches!(
+            a.strategy(&url),
+            url_md_core::adapter::Strategy::Cdp
         ));
     }
 }
