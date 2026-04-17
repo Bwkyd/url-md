@@ -14,7 +14,7 @@ use clap::{Parser, Subcommand};
 #[command(
     name = "url-md",
     version,
-    about = "Convert any URL to clean Markdown (open-source alternative to 42md CLI)"
+    about = "Convert any URL to clean Markdown · WeChat-focused · MCP-friendly · sister to 42md"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -25,6 +25,8 @@ struct Cli {
 enum Command {
     /// Fetch a single URL and output Markdown
     Md(cmd::md::Args),
+    /// Run as MCP server over stdio (for Claude Code / Cursor / Cline)
+    Serve(cmd::serve::Args),
 }
 
 /// 如果第一个非 flag 参数是 URL 且不是已知子命令,自动前置 `md` 子命令.
@@ -47,7 +49,10 @@ fn desugar_argv() -> Vec<String> {
 }
 
 fn is_known_subcommand(s: &str) -> bool {
-    matches!(s, "md" | "help" | "-h" | "--help" | "-V" | "--version")
+    matches!(
+        s,
+        "md" | "serve" | "help" | "-h" | "--help" | "-V" | "--version"
+    )
 }
 
 fn looks_like_url(s: &str) -> bool {
@@ -59,6 +64,7 @@ async fn main() -> ExitCode {
     let cli = Cli::parse_from(desugar_argv());
     let result = match cli.command {
         Command::Md(args) => cmd::md::run(args).await,
+        Command::Serve(args) => cmd::serve::run(args).await,
     };
     match result {
         Ok(()) => ExitCode::SUCCESS,
