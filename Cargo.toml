@@ -1,0 +1,8 @@
+[workspace]
+members = ["crates/url-md-spike", "crates/url-md-core", "crates/url-md-adapters", "crates/url-md"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/Bwkyd/url-md"

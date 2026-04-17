@@ -1,0 +1,13 @@
+[package]
+name = "url-md-adapters"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+url-md-core = { path = "../url-md-core" }
+async-trait = "0.1"
+scraper = "0.20"
+url = "2"
+time = { version = "0.3", features = ["parsing", "formatting"] }
+serde_yaml = "0.9"
