@@ -17,10 +17,7 @@ BIN_DIR="$INSTALL_DIR/bin"
 # ----- platform detection -----
 case "$(uname -ms)" in
     'Darwin arm64')    TARGET=aarch64-apple-darwin ;;
-    'Darwin x86_64')
-        echo "error: Intel Mac prebuilt binary not available (GitHub macos-13 runner is too slow)." >&2
-        echo "       use 'cargo install --git https://github.com/$REPO url-md --locked' instead." >&2
-        exit 1 ;;
+    'Darwin x86_64')   TARGET=x86_64-apple-darwin ;;
     'Linux x86_64')    TARGET=x86_64-unknown-linux-gnu ;;
     'Linux aarch64' | 'Linux arm64')
         echo "error: Linux arm64 prebuilt binary not available yet." >&2

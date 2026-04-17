@@ -29,8 +29,10 @@ jobs:
         include:
           - target: aarch64-apple-darwin
             os: macos-14
-          # x86_64-apple-darwin(Intel Mac)暂不预编译 —— GitHub macos-13 runner 供给紧张,
-          # 经常排队 20+ 分钟。Intel Mac 用户请用 `cargo install --git` 兜底。
+          # Intel Mac 交叉编译: 用 Apple Silicon runner(macos-14)做 cross,避开慢速 macos-13 队列.
+          # rustup 自动装 x86_64-apple-darwin target, cargo 直接能 cross-compile.
+          - target: x86_64-apple-darwin
+            os: macos-14
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
           - target: x86_64-pc-windows-msvc
