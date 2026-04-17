@@ -14,7 +14,7 @@ use clap::{Parser, Subcommand};
 #[command(
     name = "url-md",
     version,
-    about = "Convert any URL to clean Markdown · WeChat-focused · MCP-friendly · sister to 42md"
+    about = "Convert any URL to clean Markdown · WeChat-focused · MCP-friendly"
 )]
 struct Cli {
     #[command(subcommand)]

@@ -8,11 +8,6 @@ English · [中文 →](./README.md)
 
 **Any URL → clean Markdown.** WeChat-focused · MCP-friendly · Rust single binary · Apache-2.0.
 
-## Origin & Sister project
-
-- **Origin**: Rust rewrite of [`Bwkyd/wexin-read-mcp`](https://github.com/Bwkyd/wexin-read-mcp) (Python · 337★ · Playwright broken by WeChat anti-bot upgrade). The old repo keeps serving existing MCP users; this one evolves independently.
-- **Sister project** [`42md.cc`](https://42md.cc) — by Yang Zhiping. **For generic URL → Markdown, use 42md**. url-md is complementary, not competing — focused on WeChat / Chinese verticals and MCP-first integration.
-
 ## Install
 
 ### macOS / Linux

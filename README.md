@@ -8,11 +8,6 @@
 
 **任意 URL → 干净 Markdown**。专注微信公众号 + MCP 协议 · Rust 单二进制 · Apache-2.0。
 
-## 起源与姊妹项目
-
-- **起源**:升级 [`Bwkyd/wexin-read-mcp`](https://github.com/Bwkyd/wexin-read-mcp)(Python · 337★ · 微信反爬被打穿后的 Rust 重写)。老 repo 继续服务 MCP 老用户,本项目独立演进。
-- **姊妹项目** [`42md.cc`](https://42md.cc) — 阳志平老师作品,**通用 URL → Markdown 场景推荐用 42md**。url-md 与 42md 互补不竞争,专注微信/中文垂直 + MCP 协议优先。
-
 ## 安装
 
 ### macOS / Linux
