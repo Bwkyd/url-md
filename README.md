@@ -4,23 +4,39 @@
 
 ## 安装
 
+### macOS / Linux
+
 ```bash
-cargo install --git https://github.com/Bwkyd/url-md url-md --locked
+curl -fsSL https://raw.githubusercontent.com/Bwkyd/url-md/main/install.sh | bash
 ```
 
-需要先装 [Rust](https://rustup.rs)。装完后 `url-md` 会放在 `~/.cargo/bin/` — 确认这条在 `$PATH` 里(rustup 默认会加)。
+### Windows(PowerShell)
+
+```powershell
+irm https://raw.githubusercontent.com/Bwkyd/url-md/main/install.ps1 | iex
+```
+
+装到 `~/.url-md/bin/url-md`(Windows 为 `%USERPROFILE%\.url-md\bin\url-md.exe`)。脚本会提示如何加 PATH。
 
 <details>
 <summary>其他方式</summary>
 
-**从源码构建**(不想全局安装):
+**Rust 用户** — 一行从 git 装:
+```bash
+cargo install --git https://github.com/Bwkyd/url-md url-md --locked
+```
+
+**从源码构建** — 不想全局安装:
 ```bash
 git clone https://github.com/Bwkyd/url-md.git
 cd url-md && cargo build --release
 ./target/release/url-md <URL>
 ```
 
-**预编译二进制**:v0.2.0 通过 GitHub Release 提供(TODO)。
+**指定版本** — installer 接受 tag 参数:
+```bash
+curl -fsSL https://raw.githubusercontent.com/Bwkyd/url-md/main/install.sh | bash -s v0.1.1
+```
 </details>
 
 ## 用法
