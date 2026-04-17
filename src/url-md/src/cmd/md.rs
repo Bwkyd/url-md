@@ -50,10 +50,13 @@ pub struct Args {
     #[arg(short, long)]
     pub output: Option<PathBuf>,
 
-    /// Download all images to this directory and rewrite Markdown to use relative paths.
-    /// Requires -o/--output to be set.
+    /// Custom image directory (default: <output_dir>/assets/ when -o is set).
     #[arg(long, value_name = "DIR")]
     pub assets: Option<PathBuf>,
+
+    /// Disable image download (default: on when -o is set)
+    #[arg(long)]
+    pub no_assets: bool,
 
     /// Total timeout seconds (default: 45)
     #[arg(long, default_value_t = 45)]
@@ -107,8 +110,8 @@ pub async fn run(args: Args) -> Result<(), u8> {
 
     match args.output {
         None => {
-            if args.assets.is_some() && !args.quiet {
-                eprintln!("warning: --assets ignored without -o/--output");
+            if (args.assets.is_some() || args.no_assets) && !args.quiet {
+                eprintln!("warning: --assets/--no-assets ignored without -o/--output");
             }
             print!("{}", rendered);
         }
@@ -127,7 +130,18 @@ pub async fn run(args: Args) -> Result<(), u8> {
                 30u8
             })?;
 
-            let final_markdown = if let Some(assets_dir) = &args.assets {
+            // 默认下图:有 -o 就自动在 sibling 建 assets/ 下图;--no-assets 关闭;--assets 显式指定
+            let resolved_assets: Option<PathBuf> = if args.no_assets {
+                None
+            } else {
+                Some(
+                    args.assets
+                        .clone()
+                        .unwrap_or_else(|| markdown_parent.join("assets")),
+                )
+            };
+
+            let final_markdown = if let Some(assets_dir) = &resolved_assets {
                 log.default(&format!("downloading images to {}...", assets_dir.display()));
                 match localize_images(&rendered, assets_dir, &markdown_parent).await {
                     Ok((md, stats)) => {
