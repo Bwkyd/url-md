@@ -2138,7 +2138,7 @@ dependencies = [
 
 [[package]]
 name = "url-md"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -2154,7 +2154,7 @@ dependencies = [
 
 [[package]]
 name = "url-md-adapters"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "scraper",
@@ -2166,7 +2166,7 @@ dependencies = [
 
 [[package]]
 name = "url-md-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "html2md",
