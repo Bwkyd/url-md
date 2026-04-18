@@ -56,6 +56,33 @@ Other flags: `url-md --help` · `--no-assets` skip images · `--assets <DIR>` cu
 
 **Exit codes**: 0=ok · 10=network · 11=anti-bot · 12=paywall · 13=auth-required · 20=parse · 30=I/O · 99=internal
 
+## Use in Claude Code / Cursor (MCP)
+
+url-md ships as a native MCP server — AI agents can call it directly, no shell wrapping needed.
+
+### Claude Code
+
+```bash
+claude mcp add url-md -- url-md serve --mcp
+```
+
+### Cursor / Cline
+
+`mcp.json`:
+```json
+{
+  "mcpServers": {
+    "url-md": {
+      "command": "url-md",
+      "args": ["serve", "--mcp"]
+    }
+  }
+}
+```
+
+Once configured, the agent can call one tool:
+- **`md(url, timeout_seconds?)`** — returns Markdown (byte-identical to `url-md md <url>` CLI output)
+
 ## What it looks like
 
 ```bash

@@ -56,6 +56,33 @@ url-md <URL> -o out/      # 存到目录 + 自动下图到 out/assets/
 
 **退出码**: 0=成功 · 10=网络 · 11=反爬 · 12=付费墙 · 13=登录墙 · 20=解析 · 30=IO · 99=内部
 
+## 在 Claude Code / Cursor 里用(MCP)
+
+url-md 自带 MCP 协议原生支持,让 AI agent 直接调用,不用 shell 包装。
+
+### Claude Code
+
+```bash
+claude mcp add url-md -- url-md serve --mcp
+```
+
+### Cursor / Cline
+
+`mcp.json`:
+```json
+{
+  "mcpServers": {
+    "url-md": {
+      "command": "url-md",
+      "args": ["serve", "--mcp"]
+    }
+  }
+}
+```
+
+配置完后,agent 可调用单个 tool:
+- **`md(url, timeout_seconds?)`** — 返回 Markdown(与 `url-md md <url>` CLI 输出一致)
+
 ## 抓出来长啥样
 
 ```bash
