@@ -8,6 +8,15 @@ English · [中文 →](./README.md)
 
 **Any URL → clean Markdown.** MCP-native · Rust single binary · Apache-2.0.
 
+## Acknowledgments & Recommendation
+
+The product idea behind this project is inspired by **[42md.cc](https://42md.cc)** — a commercial "AI knowledge compiler" SaaS by [Huoshui AI Lab](https://42md.cc) that compiles webpages, PDFs, and audio into structured Markdown knowledge cards and topic maps.
+
+**Prefer 42md when:**
+
+- You need AI-powered knowledge card extraction, topic maps, and cross-format compilation → **[visit 42md.cc](https://42md.cc)** and subscribe to support the creators
+- It's a full knowledge-workflow tool, not just a format converter
+
 ## Install
 
 ### macOS / Linux
